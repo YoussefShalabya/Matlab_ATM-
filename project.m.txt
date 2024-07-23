@@ -1,0 +1,101 @@
+% ATM Simulation
+
+%Export Customers Data
+ids= xlsread('Book1','a:a');
+passes = xlsread('Book1','c:c');
+
+[num1,names] = xlsread('Book1',1);
+
+balances = xlsread('Book1','d:d');
+
+k=length(passes);
+selection=0;
+tries=1;
+successful=0;
+Idproblem=1;
+OldId=0;
+while (tries<=3)
+id=input("Enter your card number: ");
+for i=1:k
+    if (id==ids(i))
+        
+        disp("Welcome MR :  " +names(i));
+        Idproblem=0;
+        pin = input("Enter your password: ");
+        if(pin==passes(i))
+        tries=5;
+        successful=1;
+        selection=i;
+        end
+    end
+end
+if (selection==0)
+     if (Idproblem==1)  %if there is a problem in card number will not count the times that enter card number
+         disp(' card Number Problem Try Again !!')
+     end
+     if(Idproblem==0 && OldId==id)
+         disp(' WRONG Password Try Again !!')
+     tries=tries+1;
+     end
+end
+OldId=id; %to save the old id in previous loop
+end
+
+if (successful==1)       
+% Display main menu and get user choice
+disp("Welcome to the ATM Simulation!");
+disp("1. Check Balance");
+disp("2. Deposit");
+disp("3. Withdraw");
+disp("4. Exit");
+
+
+
+
+choice = input("Enter your choice: ");
+
+while choice ~= 4
+    % Check Balance
+    if choice == 1
+        disp("Your account balance is: " + balances(selection));
+        
+    % Deposit
+    elseif choice == 2
+        amount = input("Enter the amount to deposit: ");
+        balances(selection) = balances(selection) + amount;
+        disp("Deposit successful!");
+        disp("your new balance is: "+balances(selection));
+        
+        xlswrite('C:\Users\mostafa kamal\Desktop\Book1.xlsx',balances,'sheet1','d1');
+        
+        
+    % Withdraw
+    elseif choice == 3
+        amount = input("Enter the amount to withdraw: ");
+        if amount > balances(selection)
+            disp("Insufficient funds!");
+        else
+            balances(selection) = balances(selection) - amount;
+            disp("Withdrawal successful!");
+            disp("your new balance is: "+balances(selection));
+            xlswrite('C:\Users\mostafa kamal\Desktop\Book1.xlsx',balances,'sheet1','d1');
+
+
+        end
+        
+    % Invalid choice
+    else
+            
+        disp("Invalid choice. Please try again.");
+    end
+    
+   
+    disp(" ");
+    disp("1. Check Balance");
+    disp("2. Deposit");
+    disp("3. Withdraw");
+    disp("4. Exit");
+    choice = input("Enter your choice: ");
+end
+end
+disp("Thank you for using the ATM Simulation!");
